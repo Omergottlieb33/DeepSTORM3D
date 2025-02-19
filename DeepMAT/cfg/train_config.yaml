@@ -1,7 +1,7 @@
 # training data settings
 ntrain: 90
 nvalid: 10
-training_data_path: 'C:/Users/97254/Desktop/Resources/Technion/grad_school/shechtman_lap/DeepMAT/examples'
+training_data_path: 'C:/Users/97254/Desktop/Resources/Technion/grad_school/shechtman_lap/DeepMAT/examples/refactor/'
 visualize: true
 
 # learning settings
