@@ -1,0 +1,20 @@
+# training data settings
+ntrain: 90
+nvalid: 10
+training_data_path: 'C:/Users/97254/Desktop/Resources/Technion/grad_school/shechtman_lap/DeepMAT/examples'
+visualize: true
+
+# learning settings
+results_path: 'C:/Users/97254/Desktop/Resources/Technion/grad_school/shechtman_lap/DeepMAT/results'
+# maximal dilation flag when learning a localization CNN (set to None if learn_mask=True as we use a different CNN)
+dilation_flag: true  # if set to 1 then dmax=16 otherwise dmax=4
+# batch size for training a localization model (set to 1 for mask learning as examples are generated 16 at a time)
+batch_size: 4
+max_epochs: 50
+initial_learning_rate: 0.0005
+# scaling factor for the loss function
+scaling_factor: 800.0
+resume_training: false
+num_epochs_resume: None
+checkpoint_path: None
+device_id: 0

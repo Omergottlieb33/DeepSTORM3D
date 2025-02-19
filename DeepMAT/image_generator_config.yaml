@@ -1,0 +1,78 @@
+mask_path: './Mat_Files/mask_tetrapod_printed.mat'
+learn_mask: false
+# optics settings
+lamda : 0.67  # mean emission wavelength # in [um] (1e-6*meter)
+NA : 1.45  # numerical aperture of the objective lens
+noil : 1.518  # immersion medium refractive index
+nwater : 1.33  # imaging medium refractive index
+pixel_size_CCD : 11  # sensor pixel size in [um]
+pixel_size_SLM : 30  # SLM pixel size in [um] (after binning of 3 to reduce computational complexity)
+M : 100  # optical magnification
+f_4f : 100000.0  # 4f lenses focal length in [um]
+
+ # phase mask dimensions in SLM [pixels]
+Hmask: 203 
+Wmask: 203
+
+# single training image dimensions in sensor [pixels]
+H: 121
+W: 121
+
+# safety margin from the boundary to prevent PSF truncation in sensor [pixels]
+clear_dist: 20
+
+# training z-range and focus
+zmin: 0  # minimal z in [um] (including the axial shift)
+zmax: 4  # maximal z in [um] (including the axial shift)
+NFP: 1.5  # nominal focal plane in [um] (including the axial shift)
+
+# discretization in z in [voxels] spanning the axial range (zmax - zmin)
+D: 121
+
+batch_size_gen: 1
+
+# number of emitters in each FOV
+num_particles_range: [1, 35]
+
+# signal counts distribution and settings
+# boolean that specifies whether the signal counts are uniformly distributed
+nsig_unif: false
+# range of signal counts assuming a uniform distribution in [counts]
+nsig_unif_range: [None, None] 
+# parameters for sampling signal counts assuming a gamma distribution in [counts]
+nsig_gamma_params: [3, 3000]  # in [counts]
+# threshold on signal counts to discard positions from the training labels in [counts]
+nsig_thresh: 6000
+
+# blur standard deviation for smoothing PSFs to match experimental conditions
+# upper and lower blur standard deviation for each emitter to account for finite size in sensor [pixels]
+blur_std_range: [0.99, 1.01]
+
+# uniform/non-uniform background settings
+# uniform background value per pixel in [counts]
+unif_bg: 0
+# boolean flag whether or not to include a non-uniform background
+nonunif_bg_flag: false
+# maximal offset for the center of the non-uniform background in pixels in sensor [pixels]
+nonunif_bg_offset: [10, 10]  
+# peak and valley minimal values for the super-gaussian; randomized with addition of up to 50% in [counts]
+nonunif_bg_minvals: [20.0, 100.0]
+# minimal and maximal angle of the super-gaussian for augmentation
+nonunif_bg_theta_range: [-pi/4, pi/4]  # in [radians]
+
+# read noise settings
+ # boolean flag whether or not to include read noise
+read_noise_flag: true
+# flag whether of not the read noise standard deviation is not uniform across the FOV
+read_noise_nonuinf: true
+# range of baseline of the min-subtracted data in STORM in [counts]
+read_noise_baseline_range: [20.0, 40.0]
+# read noise standard deviation upper and lower range in [counts]
+read_noise_std_range: [8.0, 12.0]
+
+# image normalization settings
+# boolean flag whether or not to project the images to the range [0, 1]
+project_01: false
+# global normalization factors for STORM (subtract the first and divide by the second) in [counts]
+global_factors: [0.0, 250.0]
+
