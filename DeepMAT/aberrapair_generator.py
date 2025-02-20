@@ -90,7 +90,6 @@ class AberrationPairGenerator:
         )
 
         self._save_labels()
-        self._save_aberration_masks()
     
     def _generate_data(self, psf_module, mask_param, n_batches, start_idx, is_train):
         """
@@ -183,11 +182,6 @@ class AberrationPairGenerator:
         path_labels = os.path.join(self.path_train, "labels.pickle")
         with open(path_labels, "wb") as handle:
             pickle.dump(self.labels_dict, handle,
-                        protocol=pickle.HIGHEST_PROTOCOL)
-    def _save_aberration_masks(self):
-        path_masks = os.path.join(self.path_train, "mask_abr.pickle")
-        with open(path_masks, "wb") as handle:
-            pickle.dump(self.mask_abr, handle,
                         protocol=pickle.HIGHEST_PROTOCOL)
     
     def _save_setup_params(self):
