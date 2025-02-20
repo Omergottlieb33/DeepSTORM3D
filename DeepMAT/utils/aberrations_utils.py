@@ -52,6 +52,7 @@ def get_phase_mask_aberration(phase_mask, coefficients, amplitude):
         coefficients, amplitude, image_width, image_height)
     mask_abr = np.zeros(shape)
     mask_abr[y1:y2, x1:x2] = zernike_image
+    # Normalize the mask to be between -1 and 1
     normalized_mask_abr = 2 * (mask_abr - np.min(mask_abr)) / (np.max(mask_abr) - np.min(mask_abr)) - 1
     return normalized_mask_abr*mask_disk
 
@@ -98,12 +99,17 @@ def random_zernike_parameters(max_n=5, max_num_abr=10):
     poly_pairs = generate_zernike_indices(max_n)
     num_abr = random.randint(1, max_num_abr)
     coefficients = []
-    amplitude = ()
+    amplitude = []
     for i in range(num_abr):
+        #TODO: Decide whether duplicates are allowed by usinf random.sample
         m, n = random.choice(poly_pairs)
         coefficients.append((m, n))
-        amplitude += (random.uniform(0, 1),) if m != 0 and n != 0 else (0,)
-    return coefficients, amplitude
+         # If both m and n are non-zero, pick a random amplitude; otherwise use 0
+        if m != 0 and n != 0:
+            amplitude.append(random.uniform(0, 1))
+        else:
+            amplitude.append(0)
+    return coefficients, tuple(amplitude)
 
 if __name__ == '__main__':
     mask_path = r'C:\Users\97254\Desktop\git\DeepSTORM3D\Mat_Files\mask_tetrapod_printed.mat'
