@@ -57,6 +57,12 @@ class AberrationPairGenerator:
         self.path_train = self.params["training_data_path"]
         if not os.path.isdir(self.path_train):
             os.mkdir(self.path_train)
+        self.path_train_gt = os.path.join(self.path_train, "gt/")
+        if not os.path.isdir(self.path_train_gt):
+            os.mkdir(self.path_train_gt)
+        self.path_train_abr = os.path.join(self.path_train, "abr/")
+        if not os.path.isdir(self.path_train_abr):
+            os.mkdir(self.path_train_abr)
 
         # Compute number of training/validation batches
         ntrain_batches = int(
@@ -90,6 +96,7 @@ class AberrationPairGenerator:
         )
 
         self._save_labels()
+        self._save_setup_params()
     
     def _generate_data(self, psf_module, mask_param, n_batches, start_idx, is_train):
         """
@@ -129,7 +136,7 @@ class AberrationPairGenerator:
             # abrrated phase mask
             coefficients, amplitude = random_zernike_parameters(ZERNIKE_COEFFICIENTs_MAX_N, ZERNIKE_COEFFICIENTs_MAX_NUM_ABR)
             mask_abr = get_phase_mask_aberration(mask_param, coefficients, amplitude)
-            np.savez_compressed(os.path.join(self.path_train, f'mask_abr{start_idx + i}.npz'), mask_abr)
+            np.savez_compressed(os.path.join(self.path_train_abr, f'mask_abr{start_idx + i}.npz'), mask_abr)
             mask_param_abr = mask_abr + np.array(mask_param)
             mask_param_abr = torch.from_numpy(mask_param_abr)
             im_abr = psf_module(
@@ -150,11 +157,11 @@ class AberrationPairGenerator:
                 xyz = xyz[:, Nphotons > self.params["nsig_thresh"], :]
 
             # Save the image
-            img_name = os.path.join(self.path_train, f"im{start_idx + i}.tiff")
+            img_name = os.path.join(self.path_train_gt, f"im{start_idx + i}.tiff")
             img_obj = Image.fromarray(im_np)
             img_obj.save(img_name)
 
-            img_name_abr = os.path.join(self.path_train, f"im{start_idx + i}_abr.tiff")
+            img_name_abr = os.path.join(self.path_train_abr, f"im{start_idx + i}.tiff")
             img_obj_abr = Image.fromarray(im_abr_np)
             img_obj_abr.save(img_name_abr)
 
@@ -174,7 +181,7 @@ class AberrationPairGenerator:
         # Calculate and store training stats only for training data
         if is_train:
             self.params["train_stats"] = CalcMeanStd_All(
-                self.path_train, self.labels_dict
+                self.path_train_gt, self.labels_dict
             )
     
     def _save_labels(self):

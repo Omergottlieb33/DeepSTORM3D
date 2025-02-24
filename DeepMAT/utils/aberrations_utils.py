@@ -54,7 +54,8 @@ def get_phase_mask_aberration(phase_mask, coefficients, amplitude):
     mask_abr[y1:y2, x1:x2] = zernike_image
     # Normalize the mask to be between -1 and 1
     normalized_mask_abr = 2 * (mask_abr - np.min(mask_abr)) / (np.max(mask_abr) - np.min(mask_abr)) - 1
-    return normalized_mask_abr*mask_disk
+    #return normalized_mask_abr*mask_disk
+    return mask_abr
 
 
 def show_aberration_mask(phase_mask, coefficients, amplitude):
